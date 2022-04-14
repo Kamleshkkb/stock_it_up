@@ -38,8 +38,58 @@ class _AllGameOptionState extends State<AllGameOption> {
               icon: Icon(Icons.person)),
         ],
       ),
-      body: Center(
-        child: Text("All Game Option"),
+      body: Container(
+        padding: EdgeInsets.only(bottom: 42.0),
+        child: FutureBuilder<List<dynamic>>(
+          future: fetchStockData(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            
+            if (snapshot.hasData) {
+              
+              return ListView.builder(
+                  padding: EdgeInsets.all(3),
+                 itemCount: snapshot.data.length,
+                 
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      child: ListTile(
+                        leading: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 9.0),
+                            Text(
+                            
+                              '${snapshot.data[index]['symbol']}',
+                              style: TextStyle(fontSize: 15.0,
+                              fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 9.0),
+                            Text(
+                              "${snapshot.data[index]['companyName']}",
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ],
+                        ),
+
+                        trailing: Container(
+                          height: 40,
+                          width: 80,
+                          color: Colors.green,
+                          child: Center(child: Text("${snapshot.data[index]['price']}"
+                          ,style: TextStyle(fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                          )),
+                        ),
+                      
+                      ),
+                    );
+                  });
+            } else {
+              return Center(child: CircularProgressIndicator(color: Colors.blue,));
+            }
+          },
+        ),
       ),
     );
   }
